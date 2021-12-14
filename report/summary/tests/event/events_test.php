@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace forumreport_summary\event;
 
 /**
  * Tests for forum report summary events.
@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2019 Michael Hawkins <michaelh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class forumreport_summary_events_testcase extends advanced_testcase {
+class events_test extends \advanced_testcase {
     /**
      * Test report_downloaded event.
      */
@@ -51,7 +51,7 @@ class forumreport_summary_events_testcase extends advanced_testcase {
         // Create forum.
         $this->setUser($teacher);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
-        $context = context_module::instance($forum->cmid);
+        $context = \context_module::instance($forum->cmid);
 
         // Trigger and capture event.
         $eventparams = [
@@ -75,7 +75,7 @@ class forumreport_summary_events_testcase extends advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($forum->cmid, $event->contextinstanceid);
         $this->assertEquals($teacher->id, $event->userid);
-        $url = new moodle_url('/mod/forum/report/summary/index.php',
+        $url = new \moodle_url('/mod/forum/report/summary/index.php',
                 ['courseid' => $course->id, 'forumid' => $forum->id]);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
@@ -100,7 +100,7 @@ class forumreport_summary_events_testcase extends advanced_testcase {
         // Create forum.
         $this->setUser($teacher);
         $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
-        $context = context_module::instance($forum->cmid);
+        $context = \context_module::instance($forum->cmid);
 
         // Trigger and capture event.
         $eventparams = [
@@ -124,7 +124,7 @@ class forumreport_summary_events_testcase extends advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($forum->cmid, $event->contextinstanceid);
         $this->assertEquals($teacher->id, $event->userid);
-        $url = new moodle_url('/mod/forum/report/summary/index.php',
+        $url = new \moodle_url('/mod/forum/report/summary/index.php',
                 ['courseid' => $course->id, 'forumid' => $forum->id]);
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);

@@ -23,6 +23,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_forum\search;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -38,7 +40,7 @@ require_once($CFG->dirroot . '/mod/forum/lib.php');
  * @copyright   2015 David Monllao {@link http://www.davidmonllao.com}
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_forum_search_testcase extends advanced_testcase {
+class search_test extends \advanced_testcase {
 
     /**
      * @var string Area id
@@ -52,7 +54,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $this->forumpostareaid = \core_search\manager::generate_areaid('mod_forum', 'post');
 
         // Set \core_search::instance to the mock_search_engine as we don't require the search engine to be working to test this.
-        $search = testable_core_search::instance();
+        $search = \testable_core_search::instance();
     }
 
     /**
@@ -96,14 +98,14 @@ class mod_forum_search_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, 'student');
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id, 'student');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         // Available for both student and teacher.
         $forum1 = self::getDataGenerator()->create_module('forum', $record);
 
         // Create discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user1->id;
         $record->forum = $forum1->id;
@@ -111,7 +113,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $discussion1 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion($record);
 
         // Create post1 in discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user2->id;
@@ -147,7 +149,7 @@ class mod_forum_search_testcase extends advanced_testcase {
 
         // Context test: create another forum with 1 post.
         $forum2 = self::getDataGenerator()->create_module('forum', ['course' => $course1->id]);
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user1->id;
         $record->forum = $forum2->id;
@@ -155,13 +157,13 @@ class mod_forum_search_testcase extends advanced_testcase {
         self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion($record);
 
         // Test indexing with each forum then combined course context.
-        $rs = $searcharea->get_document_recordset(0, context_module::instance($forum1->cmid));
+        $rs = $searcharea->get_document_recordset(0, \context_module::instance($forum1->cmid));
         $this->assertEquals(2, iterator_count($rs));
         $rs->close();
-        $rs = $searcharea->get_document_recordset(0, context_module::instance($forum2->cmid));
+        $rs = $searcharea->get_document_recordset(0, \context_module::instance($forum2->cmid));
         $this->assertEquals(1, iterator_count($rs));
         $rs->close();
-        $rs = $searcharea->get_document_recordset(0, context_course::instance($course1->id));
+        $rs = $searcharea->get_document_recordset(0, \context_course::instance($course1->id));
         $this->assertEquals(3, iterator_count($rs));
         $rs->close();
     }
@@ -182,7 +184,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $course1 = self::getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($user->id, $course1->id, 'teacher');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $forum1 = self::getDataGenerator()->create_module('forum', $record);
 
@@ -191,7 +193,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         set_coursemodule_visible($forum2->cmid, 0);
 
         // Create discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user->id;
         $record->forum = $forum1->id;
@@ -200,7 +202,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $discussion1 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion($record);
 
         // Create post1 in discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user->id;
@@ -310,7 +312,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, 'teacher');
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id, 'student');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         // Available for both student and teacher.
@@ -321,7 +323,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         set_coursemodule_visible($forum2->cmid, 0);
 
         // Create discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user1->id;
         $record->forum = $forum1->id;
@@ -329,7 +331,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $discussion1 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion($record);
 
         // Create post1 in discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user2->id;
@@ -337,7 +339,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $discussion1reply1 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post($record);
 
         // Create discussion2 only visible to teacher.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user1->id;
         $record->forum = $forum2->id;
@@ -345,7 +347,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $discussion2 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion($record);
 
         // Create post2 in discussion2.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion2->id;
         $record->parent = $discussion2->firstpost;
         $record->userid = $user1->id;
@@ -379,13 +381,13 @@ class mod_forum_search_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, 'student');
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id, 'student');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         $forum1 = self::getDataGenerator()->create_module('forum', $record);
 
         // Create discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
         $record->userid = $user1->id;
         $record->forum = $forum1->id;
@@ -396,7 +398,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         // Attach 2 file to the discussion post.
         $post = $DB->get_record('forum_posts', array('discussion' => $discussion1->id));
         $filerecord = array(
-            'contextid' => context_module::instance($forum1->cmid)->id,
+            'contextid' => \context_module::instance($forum1->cmid)->id,
             'component' => 'mod_forum',
             'filearea'  => 'attachment',
             'itemid'    => $post->id,
@@ -408,7 +410,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $file2 = $fs->create_file_from_string($filerecord, 'Some contents 2');
 
         // Create post1 in discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user2->id;
@@ -421,7 +423,7 @@ class mod_forum_search_testcase extends advanced_testcase {
         $file3 = $fs->create_file_from_string($filerecord, 'Some contents 3');
 
         // Create post2 in discussion1.
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user2->id;
