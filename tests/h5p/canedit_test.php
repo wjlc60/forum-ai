@@ -28,7 +28,7 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_forum\h5p\canedit
  */
-class h5p_canedit_test extends \advanced_testcase {
+class canedit_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of can_edit_content().
@@ -86,7 +86,7 @@ class h5p_canedit_test extends \advanced_testcase {
 
         // Create the file.
         $filename = 'greeting-card-887.h5p';
-        $path = __DIR__ . '/../../../h5p/tests/fixtures/' . $filename;
+        $path = __DIR__ . '/../../../../h5p/tests/fixtures/' . $filename;
         if ($filecomponent === 'contentbank') {
             $generator = $this->getDataGenerator()->get_plugin_generator('core_contentbank');
             $contents = $generator->generate_contentbank_data(
@@ -114,7 +114,7 @@ class h5p_canedit_test extends \advanced_testcase {
         }
 
         // Check if the currentuser can edit the file.
-        $result = \mod_forum\h5p\canedit::can_edit_content($file);
+        $result = canedit::can_edit_content($file);
         $this->assertEquals($expected, $result);
     }
 
