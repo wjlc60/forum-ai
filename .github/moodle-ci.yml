@@ -1,0 +1,38 @@
+name: Moodle Plugin CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # Crea una matriz para probar con varias versiones de PHP,
+    # bases de datos y ramas estables de Moodle.
+    strategy:
+      fail-fast: false
+      matrix:
+        php:    [ '8.1', '8.2' ]          # Moodle 4.5 requiere ≥ 8.1
+        db:     [ mariadb, pgsql ]
+        branch: [ MOODLE_405_STABLE ]
+
+    steps:
+      # 1) Clona tu plugin
+      - uses: actions/checkout@v4
+
+      # 2) Ejecuta el runner oficial
+      - name: Moodle Plugin CI
+        uses: moodlehq/moodle-plugin-ci@v5      # siempre usa la major release más reciente
+        with:
+          moodle-branch: ${{ matrix.branch }}
+          php-version:   ${{ matrix.php }}
+          db:            ${{ matrix.db }}
+          # Indica el subtipo frankenstyle (mod_forumai) ⚠️. 
+          # Si tu repo ya tiene mod/forumai en la raíz, bastará con:
+          plugins: 'mod_forumai'
+          # El preset "default" ejecuta: phplint, phplint-dir,
+          # phpcbf, phpcs, phpunit, behat, etc. Puedes personalizar:
+          # extra-opts: "--phpunit --behat"
