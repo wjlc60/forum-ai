@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     # Crea una matriz para probar con varias versiones de PHP,
     # bases de datos y ramas estables de Moodle.
